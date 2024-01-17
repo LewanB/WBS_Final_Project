@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./Button";
 
-export default function ListElementExercise() {
+export default function ExerciseLi() {
   return (
     <li>
       <input type="text" />
