@@ -10,11 +10,11 @@ export default function SetLi() {
         <span>Reps</span>
       </div>
       <div>
-        <label htmlFor="setWeight">kg</label>
         <input id="setWeight" type="number" />
+        <label htmlFor="setWeight">kg</label>
         <input id="setReps" type="number" />
       </div>
-      <Button icon={"check icon"} />
+      <Button label="check icon" />
     </li>
   );
 }

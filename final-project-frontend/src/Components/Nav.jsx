@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Nav() {
   return (
-    <nav>
+    <nav id="nav">
       <ul>
         <li>
           <Link to="/">LOGO</Link>
@@ -12,7 +12,10 @@ export default function Nav() {
           <Link to="/exercises">Your Exercises</Link>
         </li>
         <li>
-          <Link to="/session_log">Workout Log</Link>
+          <Link to="/new_workout">Add a workout</Link>
+        </li>
+        <li>
+          <Link to="/session_log">Workout log</Link>
         </li>
       </ul>
     </nav>

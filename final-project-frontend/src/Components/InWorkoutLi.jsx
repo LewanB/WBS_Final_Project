@@ -3,23 +3,18 @@ import Button from "./Button";
 import SetLi from "./SetLi";
 import { useState } from "react";
 
-export default function InWorkoutLi({ myKey }) {
+export default function InWorkoutLi({ key }) {
   // Hooks
   const [workoutSets, setWorkoutSets] = useState([]);
 
   // Handler-Functions
-  const handleButton_AddSet = (newSet) => {
+  const handle_AddSet = (newSet) => {
     setWorkoutSets([...workoutSets, newSet]);
-  };
-
-  const randomTest = () => {
-    console.log("It finally works?");
   };
 
   return (
     <li className="inWorkoutLi">
       <div>
-        <h3>{myKey}</h3>
         <h3>Exercise Name</h3>
         <h4>Exercises Bodypart</h4>
         <p>Comment if existent...</p>
@@ -32,7 +27,7 @@ export default function InWorkoutLi({ myKey }) {
           ))}
         </ul>
 
-        <Button key={myKey} label="Add SetLi" onClick_Workout={randomTest} />
+        <Button key={key} label="New set" onClick={handle_AddSet} />
       </div>
     </li>
   );

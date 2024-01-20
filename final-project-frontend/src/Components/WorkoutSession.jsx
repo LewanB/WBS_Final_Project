@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "./Button";
 import InWorkoutLi from "./InWorkoutLi";
+import Nav from "./Nav";
 import { useState } from "react";
 
 export default function WorkoutSession() {
@@ -14,14 +15,12 @@ export default function WorkoutSession() {
 
   return (
     <div>
+      <Nav />
       <h2>New Session</h2>
       <div>
         <input type="text" placeholder="Select an exercise" />
 
-        <Button
-          label="Add exercise to session"
-          onClick_Workout={handleButton_AddToWorkout}
-        />
+        <Button label="Add exercise" onClick={handleButton_AddToWorkout} />
 
         <label htmlFor="sessionDate">Date of Session</label>
         <input id="sessionDate" type="date" />
@@ -36,8 +35,8 @@ export default function WorkoutSession() {
       <p className="commentOnWorkout"></p>
 
       <ul>
-        {workoutExercises.map((exercise, index) => (
-          <InWorkoutLi key={index} myKey={index} />
+        {workoutExercises.map((addexercise, index) => (
+          <InWorkoutLi key={index} />
         ))}
       </ul>
     </div>

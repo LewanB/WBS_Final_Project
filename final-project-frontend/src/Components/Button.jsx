@@ -1,9 +1,8 @@
 import React from "react";
 
-export default function Button({ onClick_Workout }) {
+export default function Button({ onClick, label }) {
   const onClickHandle = () => {
-    console.log("Something hapend");
-    onClick_Workout();
+    onClick();
   };
-  return <button onClick={onClickHandle}></button>;
+  return <button onClick={onClickHandle}>{label}</button>;
 }

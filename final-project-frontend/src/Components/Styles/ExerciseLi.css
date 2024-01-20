@@ -1,0 +1,4 @@
+#createExerciseLi {
+  display: flex;
+  flex-direction: column;
+}
