@@ -1,4 +1,3 @@
-const cli = require("npm/lib/cli.js");
 const client = require("../database/connect_db.js");
 
 const getExercises = async (req, res) => {
@@ -46,21 +45,21 @@ const getByName = async (req, res) => {
 const postExercise = async (req, res) => {
   const body = req.body;
   return res.status(201).json({ body: req.body });
-  // try {
-  //   if (body.name && body.body_part) {
-  //     client.query(
-  //       `INSERT INTO exercises(name, body_part, comment)
-  //       VALUES ("${body.name}","${body.body_part}","${body.comment}");`
-  //     );
-  //     let result = client.query(
-  //       `SELECT * FROM exercises
-  //       WHERE name = ${body.name};`
-  //     );
-  //     return res.status(201).json(result);
-  //   }
-  // } catch (error) {
-  //   return res.status(400).json({ eror: error.message });
-  // }
+  try {
+    if (body.name && body.body_part) {
+      client.query(
+        `INSERT INTO exercises(name, body_part, comment)
+        VALUES ("${body.name}","${body.body_part}","${body.comment}");`
+      );
+      let result = client.query(
+        `SELECT * FROM exercises
+        WHERE name = ${body.name};`
+      );
+      return res.status(201).json(result);
+    }
+  } catch (error) {
+    return res.status(400).json({ eror: error.message });
+  }
 };
 
 module.exports = {

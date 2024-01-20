@@ -1,6 +1,7 @@
 const express = require("express");
 
 const app = express();
+const cors = require("cors");
 
 // Test the database connection
 const pool = require("./database/connect_db.js");
@@ -18,7 +19,8 @@ const PORT = 8080;
 
 const exercisesRouter = require("./routes/exercisesRouter");
 
-// app.use(express.json());
+app.use(cors());
+app.use(express.json());
 app.use("/exercises", exercisesRouter);
 
 app.listen(PORT, () => {
