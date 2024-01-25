@@ -15,13 +15,17 @@ pool.connect((err, client, done) => {
 });
 
 //Start actual server functionality
-const PORT = 8080;
+const PORT = 8070;
 
-const exercisesRouter = require("./routes/exercisesRouter");
+const exercisesRouter = require("./routers/exercisesRouter");
+const setdataRouter = require("./routers/setdataRouter");
+const sessionsRouter = require("./routers/sessionsRouter");
 
 app.use(cors());
 app.use(express.json());
 app.use("/exercises", exercisesRouter);
+app.use("/setdata", setdataRouter);
+app.use("/sessions", sessionsRouter);
 
 app.listen(PORT, () => {
   console.log(`Express server listening on http://localhost:${PORT}`);

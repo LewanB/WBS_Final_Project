@@ -1,11 +1,11 @@
 const client = require("../database/connect_db.js");
 
 const getExercises = async (req, res) => {
-  await client
+  client
     .query("SELECT * FROM exercises;")
     .then((data) => {
       if (!data.rows.length) {
-        return res.status(201).json({
+        return res.status(404).json({
           cause: "getExercises -> then",
           error: "No Exercises in database",
         });
@@ -16,6 +16,27 @@ const getExercises = async (req, res) => {
       res
         .status(500)
         .json({ cause: "getExercises -> catch", error: err.message })
+    );
+};
+
+const getExercisesFiltered = async (req, res) => {
+  const { name } = req.params;
+
+  client
+    .query(`SELECT * FROM exercises WHERE name ILIKE ${name};`)
+    .then((data) => {
+      if (!data.rows.length) {
+        return res.status(404).json({
+          cause: "getExercisesFiltered -> then",
+          error: "No matching exercise names in database",
+        });
+      }
+      return res.status(200).json(data.rows);
+    })
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ cause: "getExercisesFiltered -> catch", error: err.message })
     );
 };
 
@@ -42,33 +63,65 @@ const getByName = async (req, res) => {
   }
 };
 
-const postExercise = async (req, res) => {
+const putByName = async (req, res) => {
+  const name = req.params.name;
   const body = req.body;
-  return res.status(201).json({ body: req.body });
   try {
-    if (body.name && body.body_part) {
-      client.query(
-        `INSERT INTO exercises(name, body_part, comment)
-        VALUES ("${body.name}","${body.body_part}","${body.comment}");`
+    if (body.name && body.body_part && req.params.name) {
+      const table = await client.query(
+        `SELECT name FROM exercises WHERE name = '${req.params.name}';`
       );
-      let result = client.query(
-        `SELECT * FROM exercises
-        WHERE name = ${body.name};`
-      );
-      return res.status(201).json(result);
+      if (table.rowCount) {
+        //Exercise already exists, UPDATE
+        let result = await client.query(
+          `UPDATE exercises
+          SET name = '${body.name}', body_part = '${body.body_part}', comment = '${body.comment}'
+          WHERE name = '${req.params.name}'`
+        );
+        return res.status(200).json(result.rowCount);
+      } else {
+        //Exercise not found, create new one
+        let result =
+          await client.query(`INSERT INTO exercises(name, body_part, comment)
+        VALUES ('${body.name}','${body.body_part}','${body.comment}');`);
+        return res.status(201).json(result.rows);
+      }
+    } else {
+      return res.status(400).json({ error: "Missing valid data in request!" });
     }
   } catch (error) {
-    return res.status(400).json({ eror: error.message });
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteByName = async (req, res) => {
+  const name = req.params.name;
+  name.replace("%20", " ");
+  try {
+    if (name) {
+      let result = await client.query(
+        `DELETE FROM exercises
+        WHERE name = '${name}';`
+      );
+      return res.status(200).json(result.rowCount);
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ cause: "deleteByName", error: error.message });
   }
 };
 
 module.exports = {
   getExercises,
+  getExercisesFiltered,
   getByName,
-  postExercise,
+  putByName,
+  deleteByName,
 };
 
-//let exercise = new Exercise(body.name, body.body_part, body.comment); //Hier nicht benötigt, Beispiel für FrontEnd
+////Hier nicht benötigt, Beispiel für FrontEnd
+//let exercise = new Exercise(body.name, body.body_part, body.comment);
 // class Exercise {
 //   constructor(name, body_part, comment = "") {
 //     this.name = name;

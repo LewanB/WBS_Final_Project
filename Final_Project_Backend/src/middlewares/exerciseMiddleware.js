@@ -1,14 +1,17 @@
 const client = require("../database/connect_db.js");
+const secureParam = require("../database/sqlsecure.js");
 
 const exerciseExists = (req, res, next) => {
-  const name = req.params.name;
+  const { name } = secureParam(req.params);
+  name.replace("%20", " ");
+
   //   const clientTest = client();
   client
     .query("SELECT * FROM exercises WHERE name=$1;", [name])
     .then((data) => {
       if (!data.rows.length) {
         return res.status(404).json({
-          cause: "exerciseExists -> then",
+          cause: "exerciseExists Middleware jumps in -> then",
           error: "Exercise not found",
         });
       }
@@ -16,9 +19,10 @@ const exerciseExists = (req, res, next) => {
       return next();
     })
     .catch((err) => {
-      return res
-        .status(500)
-        .json({ cause: "exerciseExists -> catch", error: err.message });
+      return res.status(500).json({
+        cause: "exerciseExists Middleware jumps in -> catch",
+        error: err.message,
+      });
     });
 };
 
