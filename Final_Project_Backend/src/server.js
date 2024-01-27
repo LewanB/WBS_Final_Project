@@ -20,12 +20,14 @@ const PORT = 8070;
 const exercisesRouter = require("./routers/exercisesRouter");
 const setdataRouter = require("./routers/setdataRouter");
 const sessionsRouter = require("./routers/sessionsRouter");
+const sessionExercisesRouter = require("./routers/sessionExercisesRouter");
 
 app.use(cors());
 app.use(express.json());
 app.use("/exercises", exercisesRouter);
 app.use("/setdata", setdataRouter);
 app.use("/sessions", sessionsRouter);
+app.use("/sessionexercises", sessionExercisesRouter);
 
 app.listen(PORT, () => {
   console.log(`Express server listening on http://localhost:${PORT}`);

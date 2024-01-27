@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const {
-  getBySessionID,
+  getBySessionExerciseID,
   postSetdata,
   deleteById,
 } = require("../controllers/setdataController.js");
@@ -10,14 +10,14 @@ const {
 //DELETE when post functions are incorporated in controller (doesn't work yet for some reason)
 const client = require("../database/connect_db.js");
 
-const { setdataExists } = require("../middlewares/setdataMiddlewares.js");
+const { checkParam } = require("../middlewares/checkParamMiddleware.js");
 
 const setdataRouter = Router();
 
-setdataRouter.get("/:sessionid", setdataExists, getBySessionID);
+setdataRouter.get("/:session_exercise_id", checkParam, getBySessionExerciseID);
 
 setdataRouter.post("/", postSetdata);
 
-setdataRouter.delete("/:id", setdataExists, deleteById);
+setdataRouter.delete("/:id", checkParam, deleteById);
 
 module.exports = setdataRouter;

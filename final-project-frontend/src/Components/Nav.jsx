@@ -5,17 +5,17 @@ export default function Nav() {
   return (
     <nav id="nav">
       <ul>
-        <li>
-          <Link to="/">LOGO</Link>
+        <li id="logo">
+          <Link to="/">GymSync</Link>
         </li>
         <li>
-          <Link to="/exercises">Your Exercises</Link>
+          <Link to="/exercises">Exercises</Link>
         </li>
         <li>
-          <Link to="/new_workout">Add a workout</Link>
+          <Link to="/new_workout">Workouts</Link>
         </li>
         <li>
-          <Link to="/session_log">Workout log</Link>
+          <Link to="/stats">Stats</Link>
         </li>
       </ul>
     </nav>

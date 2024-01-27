@@ -4,14 +4,12 @@ const getByID = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const session = await client.query(
-      `SELECT * FROM training_sessions WHERE id=${id}`
-    );
+    const session = await client.query(`SELECT * FROM sessions WHERE id=${id}`);
     if (!session.rows) {
       return res.status(400).json({
         cause: "getByID -> then",
         id: id,
-        error: "ERROR! This setdata Name does not exist!",
+        error: "ERROR! This session_id does not exist!",
       });
     }
     return res.status(200).send(session.rows);
@@ -24,7 +22,7 @@ const getByID = async (req, res) => {
 
 const getAllSessions = async (req, res) => {
   client
-    .query("SELECT * FROM training_sessions;")
+    .query("SELECT * FROM sessions;")
     .then((data) => {
       if (!data.rows.length) {
         return res.status(404).json({
@@ -54,25 +52,25 @@ const putById = async (req, res) => {
     if (isValidData(body)) {
       if (id) {
         const table = await client.query(
-          `SELECT id FROM training_sessions WHERE id = '${id}';`
+          `SELECT id FROM sessions WHERE id = '${id}';`
         );
         if (table.rowCount) {
           //Exercise already exists, UPDATE
           let result = await client.query(
-            `UPDATE training_sessions
-              SET date = '${body.date}', exercise = '${body.exercise}', comment = '${body.comment}'
+            `UPDATE sessions
+              SET date = '${body.date}', comment = '${body.comment}'
               WHERE id = '${id}'`
           );
-          return res.status(200).json(result.rows);
+          return res.status(200).json(result.rowCount);
         }
         return res.status(400).json({ error: "Invalid ID!" });
       }
 
       //Exercise not found, create new one
-      let result =
-        await client.query(`INSERT INTO training_sessions(date, exercise, comment)
-          VALUES ('${body.date}','${body.exercise}','${body.comment}');`);
-      return res.status(201).json(result.rows);
+      let result = await client.query(`INSERT INTO sessions(date, comment) 
+          VALUES ('${body.date}','${body.comment}');`);
+      //Kann ich die ID vom hinzugefügten Eintrag zurückbekommen?
+      return res.status(201).json(result.rowCount);
     } else {
       return res.status(400).json({ error: "Missing valid data in request!" });
     }
@@ -86,7 +84,7 @@ const deleteById = async (req, res) => {
   try {
     if (id) {
       let result = await client.query(
-        `DELETE FROM training_sessions
+        `DELETE FROM sessions
         WHERE id = '${id}';`
       );
       return res.status(200).json(result.rowCount);

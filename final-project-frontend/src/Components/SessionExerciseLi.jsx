@@ -3,17 +3,15 @@ import Button from "./Button";
 import SetLi from "./SetLi";
 import { useState } from "react";
 
-export default function InWorkoutLi({ key }) {
-  // Hooks
+export default function SessionExerciseLi({ key }) {
   const [workoutSets, setWorkoutSets] = useState([]);
 
-  // Handler-Functions
   const handle_AddSet = (newSet) => {
     setWorkoutSets([...workoutSets, newSet]);
   };
 
   return (
-    <li className="inWorkoutLi">
+    <li className="sessionExerciseLi">
       <div>
         <h3>Exercise Name</h3>
         <h4>Exercises Bodypart</h4>

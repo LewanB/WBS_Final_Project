@@ -9,17 +9,17 @@ const {
 
 //Important: Add middleware to remove any dangerous characters from user inputs
 
-const { exerciseExists } = require("../middlewares/exerciseMiddleware.js");
+const { checkParam } = require("../middlewares/checkParamMiddleware.js");
 
 const exerciseRouter = Router();
 
 exerciseRouter.get("/", getExercises);
 
-exerciseRouter.get("/:name", exerciseExists, getByName);
+exerciseRouter.get("/:name", checkParam, getByName);
 
 exerciseRouter.put("/:name", putByName);
 
-exerciseRouter.delete("/:name", exerciseExists, deleteByName);
+exerciseRouter.delete("/:name", checkParam, deleteByName);
 
 exerciseRouter.get("/filter/:name", getExercisesFiltered);
 

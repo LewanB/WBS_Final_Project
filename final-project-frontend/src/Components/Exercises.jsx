@@ -1,80 +1,117 @@
-// import dotenv from "dotenv";
-// dotenv.config();
-
 import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import ExerciseLi from "./ExerciseLi";
 import Nav from "./Nav";
 import axios from "axios";
 
+// EXERCISE PROBLEM!!! -> Wenn ich ein Exercise ohne Body_Part hinzufüge und save, dann edit und anschließend cancel klicke, dann verschwindet der Eintrag!
+
 export default function Exercises() {
-  // const dbAccessed = useRef(false);
-  const [exercises, setExercises] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [exercises, setExercises] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // const URI = `${process.env.API_BASE_URI}/exercises`;
-  const URI = `http://localhost:8080/exercises`;
-
-  console.log(URI);
+  const URI = `${import.meta.env.VITE_API_BASE_URI}/exercises`;
 
   function getExercisesFromServer() {
     axios
       .get(URI)
       .then((response) => {
-        console.log(response.data);
-        setExercises(response.data);
+        if (response.status == 200) {
+          setExercises(response.data);
+          console.log("Successfully fetched and set Exercises!");
+        }
         setLoading(false);
-        return response.data;
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
-        return error;
+        console.log("Fetching of Exercises failed!");
       });
-
-    // try {
-    //   const response = await fetch(URI);
-    //   console.log(response.json());
-    //   // result = await response.body.json(); //Create array of Exercise object afterwards
-    // } catch (error) {
-    //   console.error("Error fetching data:", error);
-    //   result = null;
-    // } finally {
-    //
-    //   return result;
-    // }
   }
 
   useEffect(() => {
-    if (exercises == null) {
-      let test = getExercisesFromServer(); //Must return array of Exercise objects
-      console.log(test);
+    if (!loading) {
+      if (exercises.length == 0) {
+        //exercises array is empty
+        console.log("No Exercises loaded yet, trying to fetch...");
+        setLoading(true);
+        getExercisesFromServer();
+      } else {
+        console.log("Exercises already found and loaded!");
+      }
+    } else {
+      console.log("Loading...");
     }
   }, []);
 
-  const handleButton_AddExercise = (newEntry) => {
-    // newEntry.bEdit = true;
-    setExercises([...exercises, newEntry]);
+  function handleButton_NewExercise() {
+    if (
+      !exercises.length || //no entries yet
+      exercises[exercises.length - 1].name != "" //last entry has a name -> no freshly added entry yet
+    ) {
+      console.log("Adding new Exercise...");
+
+      const newEntry = { name: "", body_part: "", comment: "" };
+
+      const tmpArray = [...exercises, newEntry];
+      setExercises(tmpArray);
+      console.log({ message: "exercises updated", exercises: exercises });
+    } else {
+      console.log("Exercises not empty, but new exercise is!");
+    }
+    console.log({
+      NOTexercisesLength: !exercises.length,
+      exercises0NameNotEmpty: exercises[0].name != "",
+    });
+  }
+
+  const handleDeleteClick = (initialName) => {
+    console.log("Delete Clicked!");
+    // Pop-Up "Sure u wanna delete?"
+    axios
+      .delete(`${URI}/${initialName}`)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log("Successfully deleted exercise!");
+          return;
+        } else {
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log("Could not connect to server!");
+        console.log(error);
+      });
   };
 
-  // if (loading) {
-  //   return <p>Loading...</p>;
-  // }
-
   return (
-    <div>
+    <>
       <Nav />
-      <Button label="New exercise" onClick={handleButton_AddExercise} />
+      <div id="topContainer"></div>
+      <div id="exercisesContainer" className="generalContainer">
+        <div className="addExerciseBtnContainer">
+          <Button label="New exercise" onClick={handleButton_NewExercise} />
+        </div>
 
-      {exercises && !loading ? (
-        <ul>
-          {exercises.map((newexercise, index) => (
-            <ExerciseLi key={index} kExercise={exercises[index]} />
-          ))}
-        </ul>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+        {exercises ? (
+          <ul>
+            {exercises.map((newexercise, index) => (
+              <ExerciseLi
+                key={index}
+                kExercise={exercises[index]}
+                btnDeleteOnClick={handleDeleteClick}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p id="exercisesLoadingP">Loading...</p>
+        )}
+        {exercises.length > 3 && (
+          <div id="up">
+            <a href="#topContainer">^</a>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

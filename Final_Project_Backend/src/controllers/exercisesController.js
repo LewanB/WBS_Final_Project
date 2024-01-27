@@ -64,19 +64,21 @@ const getByName = async (req, res) => {
 };
 
 const putByName = async (req, res) => {
-  const name = req.params.name;
+  const { name } = req.params;
+  name.replace("%20", " "); //TEST: mit oder ohne Unterschied?
+
   const body = req.body;
   try {
-    if (body.name && body.body_part && req.params.name) {
+    if (body.name && body.body_part && name) {
       const table = await client.query(
-        `SELECT name FROM exercises WHERE name = '${req.params.name}';`
+        `SELECT name FROM exercises WHERE name = '${name}';`
       );
       if (table.rowCount) {
         //Exercise already exists, UPDATE
         let result = await client.query(
           `UPDATE exercises
           SET name = '${body.name}', body_part = '${body.body_part}', comment = '${body.comment}'
-          WHERE name = '${req.params.name}'`
+          WHERE name = '${name}'`
         );
         return res.status(200).json(result.rowCount);
       } else {
@@ -95,7 +97,7 @@ const putByName = async (req, res) => {
 };
 
 const deleteByName = async (req, res) => {
-  const name = req.params.name;
+  const { name } = req.params;
   name.replace("%20", " ");
   try {
     if (name) {

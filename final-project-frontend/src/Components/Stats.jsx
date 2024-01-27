@@ -1,15 +1,16 @@
 import React from "react";
-import Button from "./Button";
+import ListElement from "./ListElement";
 import Nav from "./Nav";
+import "./Styles/Stats.css";
 
-export default function Home() {
+export default function Stats() {
   return (
     <>
       <Nav />
       <div className="generalContainer">
-        <h1>Welcome back!</h1>
+        <h2>Statistics</h2>
         <ul>
-          <li></li>
+          <ListElement />
         </ul>
       </div>
     </>

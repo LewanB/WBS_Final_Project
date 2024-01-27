@@ -1,11 +1,11 @@
-const client = require("../database/connect_db.js");
-const secureParam = require("../database/sqlsecure.js");
+const client = require("../../database/connect_db.js");
+const secureParam = require("../../database/sqlsecure.js");
 
 const sessionExists = (req, res, next) => {
   const { id } = secureParam(req.params);
 
   client
-    .query("SELECT id FROM training_sessions WHERE id=$1;", [id])
+    .query("SELECT id FROM sessions WHERE id=$1;", [id])
     .then((data) => {
       if (!data.rows.length) {
         return res.status(404).json({

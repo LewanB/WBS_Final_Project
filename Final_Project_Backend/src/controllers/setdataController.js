@@ -1,25 +1,25 @@
 const client = require("../database/connect_db.js");
 
-const getBySessionID = async (req, res) => {
-  const sessionID = req.params.sessionid;
-  console.log(sessionID);
+const getBySessionExerciseID = async (req, res) => {
+  const { session_exercise_id } = req.params;
+  console.log(session_exercise_id);
 
   try {
     const setdata = await client.query(
-      `SELECT * FROM setdata WHERE sessionid=${sessionID}`
+      `SELECT * FROM setdata WHERE session_exercise_id=${session_exercise_id}`
     );
     if (!setdata.rows) {
       return res.status(400).json({
-        cause: "getBySessionID -> then",
-        sessionID: sessionID,
-        error: "ERROR! This setdata Name does not exist!",
+        cause: "getBysession_exercise_id -> then",
+        session_exercise_id: session_exercise_id,
+        error: "ERROR! This setdata id does not exist!",
       });
     }
     return res.status(200).send(setdata.rows);
   } catch (error) {
     return res
       .status(500)
-      .json({ cause: "getBySessionID -> catch", error: error.message });
+      .json({ cause: "getBySessionExerciseID -> catch", error: error.message });
   }
 };
 
@@ -27,7 +27,7 @@ const isValidData = (body) => {
   if (!parseInt(body.setcounter)) return false;
   if (!parseFloat(body.weight)) return false;
   if (!parseInt(body.reps)) return false;
-  if (!parseInt(body.sessionid)) return false;
+  if (!parseInt(body.session_exercise_id)) return false;
   return true;
 };
 
@@ -36,8 +36,8 @@ const postSetdata = async (req, res) => {
   try {
     if (isValidData(body)) {
       let result = await client.query(
-        `INSERT into setdata (setcounter, weight, reps, sessionid)
-        VALUES (${body.setcounter}, ${body.weight}, ${body.reps}, ${body.sessionid});`
+        `INSERT into setdata (setcounter, weight, reps, session_exercise_id)
+        VALUES (${body.setcounter}, ${body.weight}, ${body.reps}, ${body.session_exercise_id});`
       );
       return res.status(201).json(result.rowCount);
     } else {
@@ -63,8 +63,4 @@ const deleteById = async (req, res) => {
   }
 };
 
-module.exports = {
-  getBySessionID,
-  postSetdata,
-  deleteById,
-};
+module.exports = { getBySessionExerciseID, postSetdata, deleteById };

@@ -11,18 +11,18 @@ const {
 //DELETE when post functions are incorporated in controller (doesn't work yet for some reason)
 const client = require("../database/connect_db.js");
 
-const { sessionExists } = require("../middlewares/sessionMiddleware.js");
+const { checkParam } = require("../middlewares/checkParamMiddleware.js");
 
 const sessionsRouter = Router();
 
 sessionsRouter.get("/", getAllSessions);
 
-sessionsRouter.get("/:id", sessionExists, getByID);
+sessionsRouter.get("/:id", checkParam, getByID);
 
 sessionsRouter.put("/", putById);
 
 sessionsRouter.put("/:id", putById);
 
-sessionsRouter.delete("/:id", sessionExists, deleteById);
+sessionsRouter.delete("/:id", checkParam, deleteById);
 
 module.exports = sessionsRouter;

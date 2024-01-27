@@ -1,5 +1,5 @@
-const client = require("../database/connect_db.js");
-const secureParam = require("../database/sqlsecure.js");
+const client = require("../../database/connect_db.js");
+const secureParam = require("../../database/sqlsecure.js");
 
 const exerciseExists = (req, res, next) => {
   const { name } = secureParam(req.params);
